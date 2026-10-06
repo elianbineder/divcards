@@ -101,3 +101,11 @@ def test_drop_enabled_signals():
     assert drop_enabled({"IsEnabled": False, "IsInGame": True}, "x") is False
     assert drop_enabled({"IsEnabled": True, "IsInGame": False}, "x") is False
     assert drop_enabled(None, "x") is None
+
+
+def test_image_paths_are_url_safe():
+    from poe_divcards.build import url_safe_path
+    assert url_safe_path("images/items/amulets/malachai's brillianceamulet.webp") == \
+        "images/items/amulets/malachai-s-brillianceamulet.webp"
+    assert url_safe_path("images/items/amulets/Ahn Artifact.webp") == "images/items/amulets/ahn-artifact.webp"
+    assert url_safe_path("images/cards/the-doctor.webp") == "images/cards/the-doctor.webp"

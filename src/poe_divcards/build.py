@@ -92,6 +92,12 @@ class BuildError(Exception):
     pass
 
 
+def url_safe_path(path: str) -> str:
+    """Image path usable in a URL as is: game file names may contain spaces and quotes
+    ("amulets/Malachai's BrillianceAmulet.dds")."""
+    return re.sub(r"[^a-z0-9/._-]+", "-", path.lower())
+
+
 def slugify(text: str) -> str:
     ascii_text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", "-", ascii_text.lower()).strip("-") or "card"
@@ -232,6 +238,7 @@ class DatasetBuilder:
     def _save_image(self, src: str, out_root: Path, rel: str,
                     crop: tuple[int, int, int, int] | None = None) -> str | None:
         """Convert ``src`` (cropped to ``crop``) to WebP at ``out_root/rel``; returns ``rel`` or None."""
+        rel = url_safe_path(rel)
         if not self.images:
             return rel if self.fs.exists(src) else None
         target = out_root / rel
