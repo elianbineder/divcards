@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poe-divcards"
+version = "0.1.0"
+description = "Read-only HTTP API and dataset builder for Path of Exile divination cards"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Elian Bineder" }]
+requires-python = ">=3.10"
+# Serving only needs these; the game is read by the optional "build" step.
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+
+[project.optional-dependencies]
+# poe-ggpk-extractor is installed from its folder: pip install -e ../poe-ggpk-extractor
+build = ["poe-ggpk-extractor>=0.1", "pillow>=10"]
+dev = ["pytest>=8", "httpx2>=2"]
+
+[project.scripts]
+poe-divcards = "poe_divcards.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: requires a real game installation (POE_GGPK or default paths)"]

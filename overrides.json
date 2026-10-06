@@ -1,0 +1,15 @@
+{
+  "_comment": "Manual corrections merged into cards.json by 'poe-divcards build'. Keys are card slugs; values are partial card records merged recursively. Keys starting with '_' are ignored.",
+  "deadly-joy": {
+    "_why": "Torrent's Reclamation is not in Words nor UniqueStashLayout.",
+    "reward": {"item": {"type": "unique", "slug": "torrent-s-reclamation", "name": "Torrent's Reclamation", "icon": null}}
+  },
+  "the-long-con": {
+    "_why": "Elderslayer's Exalted Orb is not in BaseItemTypes.",
+    "reward": {"item": {"type": "currency", "category": "Endgame Currency", "slug": "elderslayer-s-exalted-orb", "name": "Elderslayer's Exalted Orb", "icon": null}}
+  },
+  "birth-of-the-three": {
+    "_why": "Drop disabled in 3.29, but enabled and in game in the stash layout. Review each league.",
+    "enabled": false
+  }
+}

@@ -1,0 +1,461 @@
+# Faustus gold costs for league 3.29: one card per line, <cost><TAB><name>.
+# Write the cost shown by Faustus before each name; leave it empty if unknown.
+# Disabled cards are not listed. Lines starting with # are ignored.
+# Import: poe-divcards costs import datasets/3.29.3.3 <this file> -o costs/3.29.json --league "3.29" --updated-at <YYYY-MM-DD>
+325	A Chilling Wind
+250	A Dab of Ink
+325	A Dusty Memory
+1150	A Familiar Call
+525	A Fate Worse Than Death
+475	A Modest Request
+200	A Mother's Parting Gift
+350	A Note in the Wind
+90	A Sea of Blue
+425	A Stone Perfected
+275	Abandoned Wealth
+125	Acclimatisation
+400	Akil's Prophecy
+175	Alivia's Grace
+375	Alluring Bounty
+100	Alone in the Darkness
+725	Altered Perception
+1850	Ambitious Obsession
+1250	Anarchy's Price
+700	Apocalypse
+250	Arrogance of the Vaal
+65	Assassin's Favour
+1850	Assassin's Gift
+250	Astral Protection
+200	Atziri's Arsenal
+525	Audacity
+1150	Auspicious Ambitions
+500	Avian Pursuit
+125	Azure Rage
+300	Azyran's Reward
+275	Baited Expectations
+825	Beauty Through Death
+350	Bijoux
+	Birth of the Three
+150	Blind Venture
+85	Boon of Justice
+225	Boon of the First Ones
+325	Bound by Flame
+125	Boundless Realms
+425	Bowyer's Dream
+175	Broken Truce
+600	Brother's Gift
+600	Brother's Stash
+375	Brotherhood in Exile
+250	Brush, Paint and Palette
+250	Buried Treasure
+1050	Burning Blood
+175	Call to the First Ones
+125	Cameria's Cut
+125	Cartographer's Delight
+125	Chaotic Disposition
+350	Chasing Risk
+325	Checkmate
+1450	Choking Guilt
+275	Costly Curio
+350	Council of Cats
+150	Coveted Possession
+125	Cursed Words
+1350	Damnation
+500	Dark Dreams
+65	Dark Temptation
+750	Darker Half
+725	Deadly Joy
+200	Death
+375	Deathly Designs
+500	Dementophobia
+225	Demigod's Wager
+775	Desecrated Virtue
+375	Desperate Crusade
+15	Destined to Crumble
+175	Dialla's Subjugation
+300	Disdain
+275	Divine Beauty
+1850	Divine Justice
+250	Divine Shard
+50	Doedre's Madness
+450	Doryani's Epiphany
+625	Draped in Dreams
+1150	Duality
+150	Dying Anguish
+650	Dying Light
+175	Earth Drinker
+275	Echoes of Love
+575	Eldritch Perfection
+150	Emperor of Purity
+10	Emperor's Luck
+275	Endless Night
+500	Energy Sword
+700	Etched in Blood
+725	Eternal Bonds
+175	Ever-Changing
+1150	Fateful Meeting
+1350	Father's Love
+925	Fire Of Unknown Origin
+150	Forbidden Power
+550	Friendship
+400	From Bone to Ashes
+850	Further Invention
+450	Gemcutter's Mercy
+85	Gemcutter's Promise
+450	Gift of Asenath
+150	Gift of the Gemling Queen
+65	Glimmer of Hope
+125	Grave Knowledge
+175	Guardian's Challenge
+375	Harmony of Souls
+225	Haunting Shadows
+70	Her Mask
+175	Heterochromia
+1850	History
+475	Home
+150	Hope
+1850	House of Mirrors
+120	Hubris
+150	Humility
+75	Hunter's Resolve
+325	Hunter's Reward
+775	I See Brothers
+225	Immortal Resolve
+650	Imperfect Memories
+55	Imperial Legacy
+125	Jack in the Box
+400	Judging Voices
+275	Justified Ambition
+925	Keeper's Corruption
+250	Lachrymal Necrosis
+35	Lantador's Lost Love
+110	Last Hope
+1150	Last Stand
+125	Left to Fate
+475	Lethean Temptation
+250	Light and Truth
+200	Lingering Remnants
+1250	Lonely Warrior
+80	Lost Worlds
+1350	Love Through Ice
+20	Loyalty
+	Luck of the Vaal
+850	Lucky Bastion
+95	Lucky Connections
+350	Lucky Deck
+575	Luminous Trove
+150	Lysah's Respite
+250	Man With Bear
+600	Matryoshka
+350	Mawr Blaidd
+350	Merciless Armament
+150	Might is Right
+450	Misery in Darkness
+10	Mitts
+275	Monochrome
+30	More is Never Enough
+150	No Traces
+925	Nook's Crown
+1000	One Last Score
+1000	Outfoxed
+350	Peaceful Moments
+1000	Pearls Before Swine
+650	Perfection
+550	Poisoned Faith
+150	Prejudice
+450	Pride Before the Fall
+500	Pride of the First Ones
+800	Prometheus' Armoury
+55	Prosperity
+5	Rain of Chaos
+55	Rain Tempter
+40	Rats
+475	Rebirth
+250	Rebirth and Renewal
+275	Reckless Ambition
+670	Reflection of the Heart
+650	Remembrance
+550	Runic Luck
+125	Sambodhi's Vow
+575	Sambodhi's Wisdom
+150	Scholar of the Seas
+550	Seven Years Bad Luck
+125	Shard of Fate
+625	Silence and Frost
+125	Society's Remorse
+250	Something Dark
+	Soul Quenched
+675	Squandered Prosperity
+95	Struck by Lightning
+775	Succor of the Sinless
+525	Temperance
+1250	Terrible Secret of Space
+400	The Academic
+175	The Admirer
+75	The Adventuring Spirit
+120	The Aesthete
+1100	The Apothecary
+150	The Archmage's Right Hand
+55	The Arena Champion
+75	The Army of Blood
+675	The Artist
+925	The Aspirant
+1450	The Astromancer
+375	The Avenger
+925	The Awakened
+120	The Battle Born
+225	The Bear Woman
+175	The Beast
+150	The Betrayal
+450	The Bitter Blossom
+55	The Blazing Fire
+375	The Blessing of Moosh
+125	The Body
+275	The Bones
+375	The Brawny Battle Mage
+350	The Breach
+450	The Brittle Emperor
+100	The Cache
+375	The Cacophony
+125	The Calling
+275	The Card Sharp
+25	The Carrion Crow
+150	The Cataclysm
+25	The Catalyst
+925	The Catch
+225	The Celestial Justicar
+700	The Celestial Stone
+70	The Chains that Bind
+1250	The Chosen
+150	The Coming Storm
+250	The Conduit
+500	The Craving
+250	The Cursed King
+775	The Damned
+150	The Dapper Prodigy
+200	The Dark Mage
+325	The Darkest Dream
+200	The Deal
+175	The Deceiver
+400	The Deep Ones
+1850	The Demon
+65	The Demoness
+925	The Destination
+	The Devastator
+925	The Doctor
+35	The Doppelganger
+110	The Dragon
+675	The Dragon's Heart
+425	The Dreamer
+200	The Dreamland
+150	The Drunken Aristocrat
+300	The Dungeon Master
+175	The Easy Stroll
+250	The Eldritch Decay
+200	The Encroaching Darkness
+925	The Endless Darkness
+125	The Endurance
+1100	The Enforcer
+525	The Enlightened
+300	The Enthusiasts
+250	The Escape
+950	The Eternal War
+250	The Ethereal
+775	The Everlasting
+85	The Explorer
+1150	The Eye of Terror
+575	The Eye of the Dragon
+175	The Fathomless Depths
+150	The Feast
+1350	The Fiend
+275	The Finishing Touch
+825	The Fishmonger
+150	The Fletcher
+25	The Flora's Gift
+125	The Fool
+1150	The Forbidden Fruit
+325	The Forgotten Treasure
+275	The Formless Sea
+150	The Forsaken
+175	The Fortunate
+200	The Forward Gaze
+150	The Fox
+225	The Fox in the Brambles
+125	The Gambler
+500	The Garish Power
+125	The Gemcutter
+200	The Gentleman
+120	The Gladiator
+175	The Golden Era
+1350	The Greatest Intentions
+650	The Gulf
+650	The Hale Heart
+40	The Harvester
+35	The Hermit
+150	The Heroic Shot
+800	The Hive of Knowledge
+150	The Hoarder
+475	The Hook
+250	The Hunger
+825	The Immortal
+200	The Incantation
+200	The Innocent
+105	The Inoculated
+1850	The Insane Cat
+175	The Insatiable
+105	The Inventor
+275	The Jester
+125	The Jeweller's Boon
+55	The Journalist
+225	The Journey
+15	The King's Blade
+275	The King's Heart
+1500	The Lake
+650	The Last Laugh
+850	The Last One Standing
+1025	The Last Supper
+775	The Leviathan
+125	The Lich
+575	The Life Thief
+125	The Lion
+600	The Long Con
+550	The Long Watch
+200	The Lord in Black
+225	The Lord of Celebration
+10	The Lover
+90	The Lunaris Priestess
+300	The Mad King
+275	The Magma Crab
+	The Master
+125	The Master Artisan
+425	The Mayor
+175	The Mercenary
+300	The Messenger
+20	The Metalsmith's Gift
+275	The Mind's Eyes
+750	The Miracle
+125	The Mountain
+450	The Nurse
+175	The Oath
+275	The Offering
+325	The Offspring
+1600	The Old Man
+1450	The One That Got Away
+150	The One With All
+55	The Opulent
+175	The Pack Leader
+300	The Pact
+225	The Patient
+115	The Penitent
+150	The Poet
+375	The Polymath
+125	The Porcupine
+1850	The Price of Devotion
+1600	The Price of Loyalty
+375	The Price of Prescience
+175	The Price of Protection
+200	The Primordial
+375	The Prince of Darkness
+400	The Professor
+725	The Progeny of Lunaris
+400	The Queen
+575	The Rabbit's Foot
+125	The Rabid Rhoa
+200	The Realm
+200	The Return of the Rat
+125	The Risk
+150	The Rite of Elements
+350	The Road to Power
+425	The Rusted Bard
+150	The Ruthless Ceinture
+650	The Sacrifice
+200	The Saint's Treasure
+525	The Samurai's Eye
+35	The Scarred Meadow
+150	The Scavenger
+15	The Scholar
+325	The Scout
+325	The Seeker
+325	The Sephirot
+350	The Shepherd's Sandals
+925	The Shieldbearer
+425	The Shortcut
+250	The Side Quest
+90	The Sigil
+700	The Silly Boy
+250	The Siren
+125	The Skeleton
+500	The Slumbering Beast
+900	The Soul
+250	The Spark and the Flame
+225	The Spoiled Prince
+110	The Standoff
+110	The Stormcaller
+700	The Strategist
+110	The Summoner
+60	The Sun
+125	The Surgeon
+125	The Surveyor
+90	The Survivalist
+	The Sustenance
+45	The Sword King's Salute
+450	The Thaumaturgist
+400	The Throne
+350	The Tinkerer's Table
+70	The Tireless Extractor
+100	The Tower
+200	The Traitor
+325	The Transformation
+115	The Trial
+725	The Tumbleweed
+275	The Twilight Moon
+125	The Twins
+275	The Tyrant
+200	The Undaunted
+825	The Undisputed
+275	The Unexpected Prize
+175	The Union
+125	The Valkyrie
+1200	The Vast
+75	The Visionary
+125	The Void
+70	The Warden
+250	The Warlord
+125	The Watcher
+95	The Web
+550	The Wedding Gift
+650	The White Knight
+275	The Whiteout
+150	The Wilted Rose
+275	The Wind
+40	The Witch
+125	The Wolf
+150	The Wolf's Legacy
+125	The Wolf's Shadow
+275	The Wolven King's Bite
+200	The Wolverine
+925	The World Eater
+85	The Wrath
+125	The Wretched
+90	Thirst for Knowledge
+25	Three Faces in the Dark
+55	Three Voices
+65	Thunderous Skies
+105	Time-Lost Relic
+375	Toxic Tidings
+950	Tranquillity
+225	Treasure Hunter
+200	Triskaidekaphobia
+250	Turn the Other Cheek
+275	Unchained
+350	Underground Forest
+1450	Unrequited Love
+225	Vanity
+175	Vile Power
+60	Vinia's Token
+875	Void of the Elements
+110	Volatile Power
+675	Wealth and Power
+875	When Currents Blaze
+1000	Who Asked
+600	Winter's Embrace
