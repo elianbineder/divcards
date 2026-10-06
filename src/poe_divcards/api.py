@@ -56,6 +56,7 @@ Pre-generated files with every card, best for bulk use (one request instead of m
 
 ### API usage
 
+- HTTPS only: plain HTTP requests are redirected (`308`) to the same URL over HTTPS.
 - Use the export files for bulk data and `/v1/cards` to search and filter; `limit` goes up
   to 500, so the whole list fits in one request.
 - Cards are identified by `slug` (`the-doctor`), atlas areas by the game `id`
@@ -305,6 +306,16 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
         if path.startswith("/images/") and response.status_code == 200:
             response.headers["Cache-Control"] = "public, max-age=86400"
         return response
+
+    @app.middleware("http")
+    async def https_only(request: Request, call_next):
+        """Redirect plain HTTP to HTTPS behind a proxy that reports the client's scheme in
+        X-Forwarded-Proto (Heroku's router). Without that header (local runs) nothing changes."""
+        if request.headers.get("x-forwarded-proto", "").split(",")[0].strip().lower() == "http":
+            host = request.headers.get("host", request.url.netloc).removesuffix(":80")
+            query = f"?{request.url.query}" if request.url.query else ""
+            return RedirectResponse(f"https://{host}{request.url.path}{query}", status_code=308)
+        return await call_next(request)
 
     @app.exception_handler(DatasetError)
     async def dataset_error(request: Request, exc: DatasetError):

@@ -231,3 +231,13 @@ def test_public_url_sets_the_server_and_absolute_image_urls(dataset_dir):
     assert spec["servers"] == [{"url": "https://divcards.example"}]
     assert "https://github.com/x/y" in spec["info"]["description"]
     assert c.get("/v1/cards/the-doctor").json()["art"] == "https://divcards.example/images/cards/the-doctor.webp"
+
+
+def test_plain_http_behind_the_proxy_is_redirected_to_https(client):
+    r = client.get("/v1/cards?limit=1", headers={"X-Forwarded-Proto": "http", "Host": "api.example.com"},
+                   follow_redirects=False)
+    assert r.status_code == 308
+    assert r.headers["location"] == "https://api.example.com/v1/cards?limit=1"
+    # Already HTTPS behind the proxy, or a local run without the header: served normally.
+    assert client.get("/v1/cards?limit=1", headers={"X-Forwarded-Proto": "https"}).status_code == 200
+    assert client.get("/v1/cards?limit=1").status_code == 200
