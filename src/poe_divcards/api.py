@@ -415,11 +415,11 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
 
     @app.get("/docs", include_in_schema=False)
     def swagger_ui():
-        return get_swagger_ui_html(openapi_url=app.openapi_url, title=f"{app.title} - Swagger UI", **icon)
+        return get_swagger_ui_html(openapi_url=app.openapi_url, title=app.title, **icon)
 
     @app.get("/redoc", include_in_schema=False)
     def redoc():
-        return get_redoc_html(openapi_url=app.openapi_url, title=f"{app.title} - ReDoc",
+        return get_redoc_html(openapi_url=app.openapi_url, title=app.title,
                               **({"redoc_favicon_url": "/favicon.ico"} if icon else {}))
 
     @app.get("/health", include_in_schema=False)
