@@ -33,6 +33,7 @@ The API server is configured through environment variables. Only the dataset is 
 | `POE_DIVCARDS_PUBLIC_URL` | none | public address of the API: shown as the server in the docs and used as the prefix of image URLs |
 | `POE_DIVCARDS_SOURCE_URL` | none | source code repository, linked from the docs |
 | `POE_DIVCARDS_CORS` | `*` | comma-separated origins allowed to call the API from browsers |
+| `POE_DIVCARDS_ALLOWED_HOSTS` | any | comma-separated host names the API answers to; requests for any other host get 400 |
 | `POE_DIVCARDS_IMAGE_BASE_URL` | `POE_DIVCARDS_PUBLIC_URL` | prefix of image URLs when the images are served elsewhere (a CDN) |
 
 </details>

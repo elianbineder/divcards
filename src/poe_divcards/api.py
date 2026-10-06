@@ -26,6 +26,7 @@ from typing import Any, Literal
 from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -259,11 +260,14 @@ LANG_PARAM = Query("en", include_in_schema=False)
 # -- application -------------------------------------------------------------------
 def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str] | None = None,
                image_base_url: str = "", costs: str | os.PathLike[str] | None = None,
-               public_url: str = "", source_url: str = "") -> FastAPI:
+               public_url: str = "", source_url: str = "",
+               allowed_hosts: list[str] | None = None) -> FastAPI:
     """``public_url``: the API's public address, shown as the server in the docs and used
     as the image URL prefix unless ``image_base_url`` (e.g. a CDN) is given; without either,
     image URLs are paths on this host. ``costs``: gold costs file adding weights.
-    ``source_url``: source code repository, linked from the docs."""
+    ``source_url``: source code repository, linked from the docs. ``allowed_hosts``: host
+    names the API answers to (any when None); others get 400, e.g. the hosting platform's
+    own address, which would bypass a CDN in front of the public one."""
     ds = dataset if isinstance(dataset, Dataset) else Dataset(dataset, costs)
     etag = f'W/"{ds.version}"'
     public_url = public_url.rstrip("/")
@@ -319,6 +323,10 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
             query = f"?{request.url.query}" if request.url.query else ""
             return RedirectResponse(f"https://{host}{request.url.path}{query}", status_code=308)
         return await call_next(request)
+
+    # Added last so it runs first: a request for another host is rejected before anything else.
+    if allowed_hosts is not None:
+        app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts, www_redirect=False)
 
     @app.exception_handler(DatasetError)
     async def dataset_error(request: Request, exc: DatasetError):
@@ -499,13 +507,17 @@ def app_from_env() -> FastAPI:
     * ``POE_DIVCARDS_IMAGE_BASE_URL``: prefix for image URLs when they live elsewhere (a CDN).
     * ``POE_DIVCARDS_CORS``: comma-separated allowed origins (default ``*``).
     * ``POE_DIVCARDS_SOURCE_URL``: source code repository linked from the docs.
+    * ``POE_DIVCARDS_ALLOWED_HOSTS``: comma-separated host names the API answers to (default any).
     """
     path = os.environ.get("POE_DIVCARDS_DATASET")
     if not path:
         raise RuntimeError("Set POE_DIVCARDS_DATASET to the dataset directory")
     cors = os.environ.get("POE_DIVCARDS_CORS")
     origins = [o.strip() for o in cors.split(",") if o.strip()] if cors else None
+    hosts_env = os.environ.get("POE_DIVCARDS_ALLOWED_HOSTS")
+    hosts = [h.strip() for h in hosts_env.split(",") if h.strip()] if hosts_env else None
     return create_app(Path(path), origins, os.environ.get("POE_DIVCARDS_IMAGE_BASE_URL", ""),
                       os.environ.get("POE_DIVCARDS_COSTS") or None,
                       public_url=os.environ.get("POE_DIVCARDS_PUBLIC_URL", ""),
-                      source_url=os.environ.get("POE_DIVCARDS_SOURCE_URL", ""))
+                      source_url=os.environ.get("POE_DIVCARDS_SOURCE_URL", ""),
+                      allowed_hosts=hosts)

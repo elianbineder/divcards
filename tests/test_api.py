@@ -263,3 +263,12 @@ def test_plain_http_behind_the_proxy_is_redirected_to_https(client):
     # Already HTTPS behind the proxy, or a local run without the header: served normally.
     assert client.get("/v1/cards?limit=1", headers={"X-Forwarded-Proto": "https"}).status_code == 200
     assert client.get("/v1/cards?limit=1").status_code == 200
+
+
+def test_allowed_hosts_reject_other_host_names(dataset_dir):
+    c = TestClient(create_app(dataset_dir, allowed_hosts=["api.example.com"]))
+    assert c.get("/v1/meta", headers={"Host": "api.example.com"}).status_code == 200
+    # The hosting platform's own address (no CDN in front) is refused, even over plain HTTP.
+    assert c.get("/v1/meta", headers={"Host": "app-123.herokuapp.com"}).status_code == 400
+    assert c.get("/v1/meta", headers={"Host": "app-123.herokuapp.com", "X-Forwarded-Proto": "http"},
+                 follow_redirects=False).status_code == 400
