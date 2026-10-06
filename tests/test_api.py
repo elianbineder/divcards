@@ -272,3 +272,24 @@ def test_allowed_hosts_reject_other_host_names(dataset_dir):
     assert c.get("/v1/meta", headers={"Host": "app-123.herokuapp.com"}).status_code == 400
     assert c.get("/v1/meta", headers={"Host": "app-123.herokuapp.com", "X-Forwarded-Proto": "http"},
                  follow_redirects=False).status_code == 400
+
+
+def test_unknown_query_parameters_are_rejected(client):
+    r = client.get("/v1/cards?limit=5&x=123")
+    assert r.status_code == 400
+    assert r.json()["detail"] == "Unknown query parameter: x"
+    assert client.get("/v1/meta?cachebuster=1").status_code == 400
+    # Declared parameters, repeated ones and the hidden lang still work.
+    assert client.get("/v1/cards?kind=unique&kind=currency&lang=en&limit=5").status_code == 200
+    assert client.get("/v1/cards/the-doctor?lang=all").status_code == 200
+
+
+def test_card_pages_match_the_response_model(client):
+    from poe_divcards.api import CardPage
+    for query in ("", "?limit=500&include_disabled=true", "?q=doctor", "?lang=es&sort=name&order=desc"):
+        body = client.get(f"/v1/cards{query}").json()
+        assert CardPage.model_validate(body).model_dump(mode="json", exclude_none=True) == body
+    page = client.get("/v1/cards?limit=2&offset=1").json()
+    assert (page["total"], page["offset"], page["limit"], page["lang"]) == (page["total"], 1, 2, "en")
+    assert [c["slug"] for c in page["items"]] == [c["slug"] for c in client.get("/v1/cards").json()["items"][1:3]]
+

@@ -23,7 +23,7 @@ import os
 from pathlib import Path
 from typing import Any, Literal
 
-from fastapi import FastAPI, HTTPException, Query, Request, Response
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -65,8 +65,8 @@ Pre-generated files with every card, best for bulk use (one request instead of m
   (`MapWorldsBurialChambers`).
 - Responses carry an `ETag`: send it back in `If-None-Match` to get `304 Not Modified` until
   the data changes, usually at the start of a league.
-- Errors return a JSON body with `detail`: `404` unknown card, `400` unknown area or sort
-  key, `422` invalid parameter.
+- Errors return a JSON body with `detail`: `404` unknown card, `400` unknown area, sort key
+  or query parameter, `422` invalid parameter value.
 - Image fields (`art`, `icon`, `assets.frame`) point to WebP files. The card art (389×279)
   goes behind the official card frame (439×670), whose window is at (33, 62)–(413, 328).
 - New fields and endpoints may be added within `/v1`; ignore fields you do not know.
@@ -258,6 +258,32 @@ LANG_PARAM = Query("en", include_in_schema=False)
 
 
 # -- application -------------------------------------------------------------------
+_route_params: dict[int, frozenset[str]] = {}
+
+
+def _query_param_names(dependant: Any) -> set[str]:
+    """Query parameters of an endpoint and of its dependencies."""
+    names = {p.alias for p in dependant.query_params}
+    for sub in dependant.dependencies:
+        names |= _query_param_names(sub)
+    return names
+
+
+def known_query_params(request: Request) -> None:
+    """Reject query parameters the endpoint does not take: an unknown parameter would make
+    every request a different URL, bypassing the caches in front of the API."""
+    route = request.scope.get("route")
+    if route is None or not hasattr(route, "dependant"):
+        return
+    names = _route_params.get(id(route))
+    if names is None:
+        names = _route_params[id(route)] = frozenset(_query_param_names(route.dependant))
+    unknown = sorted(set(request.query_params) - names)
+    if unknown:
+        raise HTTPException(status_code=400, detail=f"Unknown query parameter: {', '.join(unknown)}")
+
+
+# -- application -------------------------------------------------------------------
 def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str] | None = None,
                image_base_url: str = "", costs: str | os.PathLike[str] | None = None,
                public_url: str = "", source_url: str = "",
@@ -287,6 +313,7 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
         license_info={"name": "MIT (source code)", "identifier": "MIT"},
         docs_url=None,   # served below with the dataset's favicon
         redoc_url=None,
+        dependencies=[Depends(known_query_params)],
     )
     app.state.dataset = ds
     app.add_middleware(GZipMiddleware, minimum_size=1024)
@@ -399,6 +426,21 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
     def health():
         return {"status": "ok", "dataset": ds.manifest.get("label")}
 
+    summaries: dict[str, dict[str, str]] = {}
+
+    def summary_json(slug: str, lang: str) -> str:
+        """A card summary serialized once per language through its response model, so
+        pages are joined from ready JSON instead of validating every card per request."""
+        if lang not in summaries:
+            summaries[lang] = {
+                c["slug"]: CardSummary.model_validate(urls(ds.summary(c, lang))).model_dump_json(exclude_none=True)
+                for c in ds.cards
+            }
+        return summaries[lang][slug]
+
+    for code in ds.languages if ds.cards else ():
+        summary_json(ds.cards[0]["slug"], code)   # built at startup, not on the first request
+
     @app.get("/v1/cards", response_model=CardPage, response_model_exclude_none=True, tags=["cards"],
              summary="Search cards")
     def list_cards(
@@ -439,7 +481,9 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
             include_disabled=include_disabled, sort=sort, descending=order == "desc",
             offset=offset, limit=limit,
         ))
-        return {"total": total, "offset": offset, "limit": limit, "lang": code, "items": urls(items)}
+        body = (f'{{"total":{total},"offset":{offset},"limit":{limit},"lang":{json.dumps(code)},"items":['
+                + ",".join(summary_json(item["slug"], code) for item in items) + "]}")
+        return Response(body, media_type="application/json")
 
     @app.get("/v1/cards/{slug}", response_model=CardDetail, response_model_exclude_none=True, tags=["cards"],
              summary="Get a card", responses={404: {"description": "Unknown card slug"}})
