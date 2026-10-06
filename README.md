@@ -4,11 +4,12 @@ HTTP API for **Path of Exile Divination Card** data: names, rewards and flavour 
 exactly as the game writes them, card art, the atlas maps that drop each card and
 estimated drop weights for the current league.
 
-The API and its documentation are available at `https://divcards-22f1fe2729ec.herokuapp.com`: [Swagger UI](https://divcards-22f1fe2729ec.herokuapp.com/docs),
-[ReDoc](https://divcards-22f1fe2729ec.herokuapp.com/redoc), and export files with every card
-([`/export/cards.json`](https://divcards-22f1fe2729ec.herokuapp.com/export/cards.json),
-[`/export/basic_cards.json`](https://divcards-22f1fe2729ec.herokuapp.com/export/basic_cards.json),
-[`/export/areas.json`](https://divcards-22f1fe2729ec.herokuapp.com/export/areas.json)).
+The API and its documentation are available at `https://api.divcards.app`:
+[Swagger UI](https://api.divcards.app/docs), [ReDoc](https://api.divcards.app/redoc), and
+export files with every card
+([`/export/cards.json`](https://api.divcards.app/export/cards.json),
+[`/export/basic_cards.json`](https://api.divcards.app/export/basic_cards.json),
+[`/export/areas.json`](https://api.divcards.app/export/areas.json)).
 
 The data is extracted from the game files with
 [poe-ggpk-extractor](https://github.com/elianbineder/poe-ggpk-extractor).
