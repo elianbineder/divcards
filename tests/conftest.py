@@ -47,7 +47,7 @@ def dataset_dir(tmp_path_factory):
         "format": 5, "label": "test", "game": 1, "built_at": "2026-10-05T00:00:00Z",
         "content_sha256": "0123456789abcdef" * 4, "source": {},
         "languages": {"en": "English", "es": "Spanish"}, "counts": {"cards": len(cards), "areas": 2},
-        "assets": {"frame": "images/frames/divinationcard.webp"},
+        "assets": {"frame": "images/frames/divinationcard.webp", "favicon": "images/favicon.png"},
     }), encoding="utf-8")
     (root / "areas.json").write_text(json.dumps({
         "MapWorldsBurialChambers": {"id": "MapWorldsBurialChambers", "tier": 14, "unique_map": False,
@@ -60,4 +60,5 @@ def dataset_dir(tmp_path_factory):
     }), encoding="utf-8")
     (root / "images" / "cards").mkdir(parents=True)
     (root / "images" / "cards" / "the-doctor.webp").write_bytes(b"RIFF....WEBP")
+    (root / "images" / "favicon.png").write_bytes(b"\x89PNG\r\n\x1a\n....")
     return root

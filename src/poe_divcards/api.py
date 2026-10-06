@@ -26,7 +26,8 @@ from typing import Any, Literal
 from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -234,7 +235,7 @@ class Meta(BaseModel):
     version: str = Field(description="Changes whenever the data or the gold costs change (also the ETag)")
     built_at: str
     languages: dict[str, str]
-    assets: dict[str, str] = Field(description="Shared images: frame (official card frame, 439×670)")
+    assets: dict[str, str] = Field(description="Shared images: frame (official card frame, 439×670), favicon (card icon)")
     costs: CostsInfo | None = Field(None, description="Gold costs in use; null when there are no weights")
     counts: dict[str, int]
     source: dict[str, Any]
@@ -280,6 +281,8 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
         openapi_tags=TAGS,
         servers=[{"url": public_url}] if public_url else None,
         license_info={"name": "MIT (source code)", "identifier": "MIT"},
+        docs_url=None,   # served below with the dataset's favicon
+        redoc_url=None,
     )
     app.state.dataset = ds
     app.add_middleware(GZipMiddleware, minimum_size=1024)
@@ -324,7 +327,7 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
     def urls(obj: Any) -> Any:
         """Turn the dataset's relative image paths into URLs."""
         if isinstance(obj, dict):
-            return {k: (image_prefix + v if k in ("art", "icon", "frame", "image") and isinstance(v, str) else urls(v))
+            return {k: (image_prefix + v if k in ("art", "icon", "frame", "favicon", "image") and isinstance(v, str) else urls(v))
                     for k, v in obj.items()}
         if isinstance(obj, list):
             return [urls(v) for v in obj]
@@ -363,6 +366,26 @@ def create_app(dataset: Dataset | str | os.PathLike[str], cors_origins: list[str
     @app.get("/", include_in_schema=False)
     def root():
         return RedirectResponse("/docs")
+
+    # Favicon: the divination card icon from the dataset (FastAPI's own icon if it has none).
+    favicon_rel = ds.manifest.get("assets", {}).get("favicon")
+    favicon = ds.root / favicon_rel if favicon_rel else None
+    icon = {"swagger_favicon_url": "/favicon.ico"} if favicon and favicon.is_file() else {}
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon_ico():
+        if not icon:
+            raise HTTPException(status_code=404, detail="No favicon")
+        return FileResponse(favicon, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
+
+    @app.get("/docs", include_in_schema=False)
+    def swagger_ui():
+        return get_swagger_ui_html(openapi_url=app.openapi_url, title=f"{app.title} - Swagger UI", **icon)
+
+    @app.get("/redoc", include_in_schema=False)
+    def redoc():
+        return get_redoc_html(openapi_url=app.openapi_url, title=f"{app.title} - ReDoc",
+                              **({"redoc_favicon_url": "/favicon.ico"} if icon else {}))
 
     @app.get("/health", include_in_schema=False)
     def health():

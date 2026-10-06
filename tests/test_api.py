@@ -112,7 +112,29 @@ def test_large_responses_are_compressed(client):
 
 
 def test_meta_exposes_frame(client):
-    assert client.get("/v1/meta").json()["assets"] == {"frame": "/images/frames/divinationcard.webp"}
+    assert client.get("/v1/meta").json()["assets"] == {"frame": "/images/frames/divinationcard.webp",
+                                                       "favicon": "/images/favicon.png"}
+
+
+def test_favicon_is_the_dataset_card_icon(client):
+    r = client.get("/favicon.ico")
+    assert r.status_code == 200 and r.headers["content-type"] == "image/png"
+    assert r.content.startswith(b"\x89PNG")
+    for page in ("/docs", "/redoc"):
+        html = client.get(page).text
+        assert 'href="/favicon.ico"' in html and "fastapi.tiangolo.com/img/favicon" not in html
+
+
+def test_without_a_favicon_the_docs_keep_fastapis(dataset_dir, tmp_path):
+    import shutil
+    copy = tmp_path / "ds"
+    shutil.copytree(dataset_dir, copy)
+    manifest = json.loads((copy / "manifest.json").read_text(encoding="utf-8"))
+    del manifest["assets"]["favicon"]
+    (copy / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    c = TestClient(create_app(copy))
+    assert c.get("/favicon.ico").status_code == 404
+    assert "fastapi.tiangolo.com/img/favicon" in c.get("/docs").text
 
 
 def test_drops_in_detail_are_localized(client):

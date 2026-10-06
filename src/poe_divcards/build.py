@@ -11,6 +11,7 @@ serves without needing the game, the schema or the Oodle decompressor::
         images/cards/*.webp    card art
         images/items/**.webp   icons of the reward items
         images/frames/*.webp   card frame
+        images/favicon.png     divination card icon, the API favicon
         images/glyphs/*.webp   inline images of the texts (Harbinger glyphs)
 
 Sources (PoE1 tables):
@@ -52,6 +53,7 @@ CARD_CLASS = "DivinationCard"
 ART_MAP = "art/uidivinationimages.txt"
 ART_ROOT = "art/textures/interface/2d/divinationcards/"
 FRAME_ART = "art/2ditems/divination/images/divinationcard"
+FAVICON_ART = "art/2ditems/divination/inventoryicon.dds"
 # Inline <<name>> images in texts (Harbinger glyphs) are UI images under GLYPH_ROOT.
 UI_IMAGES = "art/uiimages1.txt"
 GLYPH_ROOT = "art/2dart/uiimages/ingame/harbingerglyph/"
@@ -254,7 +256,10 @@ class DatasetBuilder:
         if crop:
             image = image.crop(crop)
         target.parent.mkdir(parents=True, exist_ok=True)
-        image.save(target, format="WEBP", quality=90, method=4)
+        if target.suffix == ".png":  # e.g. the favicon: PNG is what every browser accepts there
+            image.save(target, format="PNG", optimize=True)
+        else:
+            image.save(target, format="WEBP", quality=90, method=4)
         self.report.images += 1
         return rel
 
@@ -468,6 +473,10 @@ class DatasetBuilder:
             rel = self._save_image(frame[0], out, "images/frames/divinationcard.webp", crop=frame[1])
             if rel:
                 self.assets["frame"] = rel
+        # The divination card inventory icon, used by the API as its favicon.
+        rel = self._save_image(FAVICON_ART, out, "images/favicon.png")
+        if rel:
+            self.assets["favicon"] = rel
 
         records = []
         for n, r in enumerate(cards, 1):
